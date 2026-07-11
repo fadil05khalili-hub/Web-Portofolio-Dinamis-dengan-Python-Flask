@@ -34,10 +34,11 @@
   <div class="col-sm-6 col-xl-3">
     <div class="admin-stat-card">
       <div class="admin-stat-trend {% if card.up %}trend-up{% else %}trend-down{% endif %}">
-        <i class="bi {% if card.up <div class="admin-stat-icon" style="background:{{ card.bg }}; color:{{ card.color }};"></i> %}bi-arrow-up-right{% else %}bi-arrow-down-right{% endif %}"></i>
+        <i class="bi {% if card.up %}bi-arrow-up-right{% else %}bi-arrow-down-right{% endif %}"></i>
         <span>{{ card.trend }}</span>
       </div>
      
+      <div class="admin-stat-icon" style="background:{{ card.bg }}; color:{{ card.color }};">
         <i class="bi {{ card.icon }}"></i>
       </div>
       <div class="admin-stat-num">{{ card.num }}</div>
