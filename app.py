@@ -12,8 +12,8 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config.from_object('config.Config')
 
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
+if not os.environ.get('VERCEL'):
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 db.init_app(app)
 
 from models import Project, Message, Profile, Skill
@@ -388,9 +388,9 @@ def seed_data():
 
 
 # ══ ENTRY POINT ══════════════════════════════════════════════
-
-if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
+    if __name__ == '__main__':
         seed_data()
-    app.run(debug=True)
+        app.run(debug=True)
