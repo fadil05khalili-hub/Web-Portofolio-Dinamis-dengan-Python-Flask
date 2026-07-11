@@ -31,9 +31,9 @@
   --text-light: #94A3B8;
 
   --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --shadow: 0 4px 16px rgba(37,99,235,.08), 0 1px 4px rgba(0,0,0,.05);
-  --shadow-md: 0 8px 32px rgba(37,99,235,.12), 0 2px 8px rgba(0,0,0,.06);
-  --shadow-lg: 0 20px 60px rgba(37,99,235,.15), 0 4px 16px rgba(0,0,0,.08);
+  --shadow: 0 4px 16px rgba(37,99,234,.09), 0 1px 4px rgba(0,0,0,.05);
+  --shadow-md: 0 8px 32px rgba(37,99,234,.12), 0 2px 8px rgba(0,0,0,.06);
+  --shadow-lg: 0 20px 60px rgba(37,99,234,.15), 0 4px 16px rgba(0,0,0,.09);
 
   --radius: 12px;
   --radius-lg: 20px;
