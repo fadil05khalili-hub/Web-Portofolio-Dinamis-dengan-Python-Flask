@@ -1,0 +1,142 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block breadcrumb %}Admin / Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- ── Welcome Banner ──────────────────────────────────────── -->
+<div style="background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); border-radius:var(--radius-xl); padding:1.75rem 2rem; margin-bottom:1.5rem; position:relative; overflow:hidden;">
+  <div style="position:absolute; width:300px; height:300px; background:white; opacity:.05; border-radius:50%; top:-80px; right:-60px;"></div>
+  <div style="position:absolute; width:200px; height:200px; background:white; opacity:.04; border-radius:50%; bottom:-60px; right:150px;"></div>
+  <div style="position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h2 style="color:white; font-weight:800; font-size:1.3rem; margin:0 0 .3rem;">Selamat datang kembali, Admin! 👋</h2>
+      <p style="color:rgba(255,255,255,.75); font-size:.875rem; margin:0;">Kelola portfolio Anda dengan mudah dari sini.</p>
+    </div>
+    <a href="{{ url_for('index') }}" target="_blank"
+       style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2); color:white; padding:.5rem 1.2rem; border-radius:var(--radius-full); font-size:.85rem; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; backdrop-filter:blur(10px); transition:all .2s; text-decoration:none;"
+       onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">
+      <i class="bi bi-box-arrow-up-right"></i> View Site
+    </a>
+  </div>
+</div>
+
+<!-- ── Stats Cards ─────────────────────────────────────────── -->
+<div class="row g-3 mb-4">
+  {% set cards = [
+    {'icon': 'bi-folder2-open', 'num': stats.projects, 'label': 'Total Projects', 'color': 'var(--primary)', 'bg': 'var(--primary-50)', 'trend': '+2 bulan ini', 'up': true},
+    {'icon': 'bi-chat-dots-fill', 'num': stats.messages, 'label': 'Total Pesan', 'color': '#10B981', 'bg': '#D1FAE5', 'trend': '+5 minggu ini', 'up': true},
+    {'icon': 'bi-lightning-charge-fill', 'num': stats.skills, 'label': 'Total Skills', 'color': '#F59E0B', 'bg': '#FEF3C7', 'trend': 'Stabil', 'up': true},
+    {'icon': 'bi-envelope-exclamation-fill', 'num': stats.unread, 'label': 'Pesan Belum Dibaca', 'color': '#EF4444', 'bg': '#FEF2F2', 'trend': 'Perlu ditangani', 'up': false},
+  ] %}
+  {% for card in cards %}
+  <div class="col-sm-6 col-xl-3">
+    <div class="admin-stat-card">
+      <div class="admin-stat-trend {% if card.up %}trend-up{% else %}trend-down{% endif %}">
+        <i class="bi {% if card.up %}bi-arrow-up-right{% else %}bi-arrow-down-right{% endif %}"></i>
+        <span>{{ card.trend }}</span>
+      </div>
+      <div class="admin-stat-icon" style="background:{{ card.bg }}; color:{{ card.color }};">
+        <i class="bi {{ card.icon }}"></i>
+      </div>
+      <div class="admin-stat-num">{{ card.num }}</div>
+      <div class="admin-stat-label">{{ card.label }}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- ── Quick Actions ───────────────────────────────────────── -->
+<div class="row g-3 mb-4">
+  <div class="col-12">
+    <div style="background:var(--surface); border-radius:var(--radius-lg); padding:1.25rem 1.5rem; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+      <h3 style="font-size:.9rem; font-weight:700; margin-bottom:1rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em;">Quick Actions</h3>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{{ url_for('admin_add_project') }}" class="btn-primary-custom" style="font-size:.85rem; padding:.55rem 1.25rem;">
+          <i class="bi bi-plus-circle-fill"></i> Tambah Project
+        </a>
+        <a href="{{ url_for('admin_messages') }}" class="btn-outline-custom" style="font-size:.85rem; padding:.5rem 1.25rem;">
+          <i class="bi bi-chat-dots"></i> Lihat Pesan
+        </a>
+        <a href="{{ url_for('admin_profile') }}" class="btn-outline-custom" style="font-size:.85rem; padding:.5rem 1.25rem;">
+          <i class="bi bi-person-gear"></i> Edit Profil
+        </a>
+        <a href="{{ url_for('index') }}" target="_blank" class="btn-ghost" style="border:1px solid var(--border); font-size:.85rem; padding:.5rem 1.25rem;">
+          <i class="bi bi-eye"></i> Preview Site
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Recent Messages + Projects ─────────────────────────── -->
+<div class="row g-3">
+
+  <!-- Recent Messages -->
+  <div class="col-lg-6">
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <span class="admin-table-title"><i class="bi bi-chat-left-dots-fill text-primary me-2"></i>Pesan Terbaru</span>
+        <a href="{{ url_for('admin_messages') }}" style="font-size:.8rem; color:var(--primary); font-weight:600; text-decoration:none;">
+          Lihat Semua <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+      <div style="padding:.75rem;">
+        {% for msg in messages[:4] %}
+        <div style="display:flex; align-items:flex-start; gap:.75rem; padding:.75rem; border-radius:var(--radius); {% if not msg.read %}background:var(--primary-50); border:1px solid var(--primary-100);{% endif %} margin-bottom:.5rem; transition:all .2s;"
+             onmouseover="this.style.background='var(--bg-alt)'" onmouseout="this.style.background='{% if not msg.read %}var(--primary-50){% else %}transparent{% endif %}'">
+          <div class="message-avatar" style="width:36px; height:36px; font-size:.8rem;">{{ msg.name[0] }}</div>
+          <div style="flex:1; min-width:0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:.5rem;">
+              <span style="font-weight:700; font-size:.85rem;">{{ msg.name }}</span>
+              <span style="font-size:.72rem; color:var(--text-light); white-space:nowrap;">{{ msg.date }}</span>
+            </div>
+            <p style="font-size:.78rem; color:var(--text-muted); margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ msg.message }}</p>
+          </div>
+          {% if not msg.read %}
+          <div class="unread-dot" style="margin-top:.3rem;"></div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Projects -->
+  <div class="col-lg-6">
+    <div class="admin-table-wrap">
+      <div class="admin-table-header">
+        <span class="admin-table-title"><i class="bi bi-folder2-open text-primary me-2"></i>Project Terbaru</span>
+        <a href="{{ url_for('admin_projects') }}" style="font-size:.8rem; color:var(--primary); font-weight:600; text-decoration:none;">
+          Kelola <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+      <div style="padding:.75rem;">
+        {% for project in messages[:4] %}
+        {% endfor %}
+        <!-- Static sample of recent projects -->
+        {% set recent_titles = ['E-Commerce Platform', 'Task Management App', 'Data Dashboard', 'Blog CMS'] %}
+        {% set recent_cats = ['Web App', 'Web App', 'Data', 'CMS'] %}
+        {% for i in range(4) %}
+        <div style="display:flex; align-items:center; gap:.75rem; padding:.75rem; border-radius:var(--radius); margin-bottom:.5rem; cursor:pointer; transition:background .15s;"
+             onmouseover="this.style.background='var(--bg-alt)'" onmouseout="this.style.background='transparent'">
+          <div style="width:44px; height:36px; background:linear-gradient(135deg, var(--primary-50), var(--primary-100)); border-radius:8px; border:1px solid var(--primary-100); display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:.9rem; flex-shrink:0;">
+            <i class="bi bi-window-stack"></i>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:700; font-size:.85rem;">{{ recent_titles[i] }}</div>
+            <div style="font-size:.75rem; color:var(--text-muted);">{{ recent_cats[i] }}</div>
+          </div>
+          <a href="{{ url_for('admin_projects') }}" style="color:var(--text-light); font-size:.85rem;">
+            <i class="bi bi-pencil-square"></i>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

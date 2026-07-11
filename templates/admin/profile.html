@@ -1,0 +1,141 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block page_title %}Edit Profile{% endblock %}
+{% block breadcrumb %}Admin / Profile{% endblock %}
+
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+  <div class="row g-4">
+
+    <!-- Left: Photo + Quick Info -->
+    <div class="col-lg-4">
+
+      <!-- Profile Photo Card -->
+      <div class="admin-form-card mb-3 text-center">
+        <p class="admin-form-section-title" style="text-align:left;">Foto Profil</p>
+        <div style="position:relative; width:120px; height:120px; margin:0 auto 1rem;">
+          <div style="width:120px; height:120px; border-radius:50%; background:linear-gradient(135deg, var(--primary-50), var(--primary-100)); display:flex; align-items:center; justify-content:center; font-size:3rem; color:var(--primary); border:3px solid var(--border);">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <button type="button" onclick="document.getElementById('photo-upload').click()"
+                  style="position:absolute; bottom:2px; right:2px; width:32px; height:32px; background:var(--primary); border:2px solid white; border-radius:50%; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.85rem;">
+            <i class="bi bi-camera-fill"></i>
+          </button>
+        </div>
+        <input type="file" id="photo-upload" name="photo" accept="image/*" style="display:none;" data-preview="photo-preview">
+        <img id="photo-preview" src="#" alt="Preview" style="display:none; width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); margin-bottom:1rem;">
+        <div class="upload-area" onclick="document.getElementById('photo-upload').click()" style="padding:1rem; margin-top:.5rem;">
+          <p style="font-size:.8rem; margin:0; color:var(--text-muted);">
+            <i class="bi bi-cloud-arrow-up text-primary me-1"></i> Upload foto baru
+          </p>
+          <p style="font-size:.72rem; color:var(--text-light); margin:.2rem 0 0;">JPG, PNG · Maks. 2MB</p>
+        </div>
+      </div>
+
+      <!-- Social Links Card -->
+      <div class="admin-form-card">
+        <p class="admin-form-section-title">Social Media</p>
+        <div class="d-flex flex-column gap-3">
+          <div>
+            <label class="form-label-custom"><i class="bi bi-github me-1"></i>GitHub URL</label>
+            <input type="url" name="github" class="form-control-custom" value="{{ profile.github }}" placeholder="https://github.com/username">
+          </div>
+          <div>
+            <label class="form-label-custom"><i class="bi bi-linkedin me-1"></i>LinkedIn URL</label>
+            <input type="url" name="linkedin" class="form-control-custom" value="{{ profile.linkedin }}" placeholder="https://linkedin.com/in/username">
+          </div>
+          <div>
+            <label class="form-label-custom"><i class="bi bi-envelope me-1"></i>Email</label>
+            <input type="email" name="email" class="form-control-custom" value="{{ profile.email }}" placeholder="email@example.com">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Main Profile Info -->
+    <div class="col-lg-8">
+
+      <!-- Basic Info -->
+      <div class="admin-form-card mb-3">
+        <p class="admin-form-section-title">Informasi Dasar</p>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <label class="form-label-custom" for="name">Nama Lengkap <span style="color:var(--danger);">*</span></label>
+            <input type="text" id="name" name="name" class="form-control-custom" value="{{ profile.name }}" required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-custom" for="location">Lokasi</label>
+            <input type="text" id="location" name="location" class="form-control-custom" value="{{ profile.location }}" placeholder="Jakarta, Indonesia">
+          </div>
+          <div class="col-12">
+            <label class="form-label-custom" for="headline">Headline / Profesi <span style="color:var(--danger);">*</span></label>
+            <input type="text" id="headline" name="headline" class="form-control-custom" value="{{ profile.headline }}" placeholder="Full Stack Developer & UI/UX Enthusiast" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label-custom" for="bio">Bio / Tentang Saya <span style="color:var(--danger);">*</span></label>
+            <textarea id="bio" name="bio" rows="4" class="form-control-custom" placeholder="Ceritakan tentang dirimu..." required>{{ profile.about }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills Section -->
+      <div class="admin-form-card mb-3">
+        <p class="admin-form-section-title">Keahlian (Skills)</p>
+        <div id="skills-container" class="d-flex flex-column gap-2">
+          {% for skill in skills %}
+          <div class="skill-row" style="display:flex; gap:.75rem; align-items:center;">
+            <input type="text" name="skill_name[]" class="form-control-custom" value="{{ skill.name }}" placeholder="Nama skill" style="flex:2;">
+            <input type="text" name="skill_cat[]" class="form-control-custom" value="{{ skill.category }}" placeholder="Kategori" style="flex:1;">
+            <input type="number" name="skill_level[]" class="form-control-custom" value="{{ skill.level }}" min="0" max="100" placeholder="%" style="flex:0 0 80px;">
+            <button type="button" onclick="this.closest('.skill-row').remove()"
+                    style="width:36px; height:36px; border:1px solid var(--danger); background:#FEF2F2; color:var(--danger); border-radius:8px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" id="add-skill" class="btn-ghost mt-2" style="border:1.5px dashed var(--border); width:100%; justify-content:center; color:var(--text-muted);">
+          <i class="bi bi-plus-circle me-1"></i> Tambah Skill
+        </button>
+      </div>
+
+      <!-- Submit -->
+      <div class="admin-form-card">
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn-primary-custom">
+            <i class="bi bi-check-circle-fill"></i> Simpan Perubahan
+          </button>
+          <a href="{{ url_for('admin_dashboard') }}" class="btn-outline-custom">
+            Batal
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.getElementById('add-skill').addEventListener('click', function() {
+    const container = document.getElementById('skills-container');
+    const row = document.createElement('div');
+    row.className = 'skill-row';
+    row.style = 'display:flex; gap:.75rem; align-items:center;';
+    row.innerHTML = `
+      <input type="text" name="skill_name[]" class="form-control-custom" placeholder="Nama skill" style="flex:2;">
+      <input type="text" name="skill_cat[]" class="form-control-custom" placeholder="Kategori" style="flex:1;">
+      <input type="number" name="skill_level[]" class="form-control-custom" min="0" max="100" placeholder="%" style="flex:0 0 80px;">
+      <button type="button" onclick="this.closest('.skill-row').remove()"
+              style="width:36px; height:36px; border:1px solid var(--danger); background:#FEF2F2; color:var(--danger); border-radius:8px; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+        <i class="bi bi-trash3"></i>
+      </button>
+    `;
+    container.appendChild(row);
+  });
+</script>
+{% endblock %}

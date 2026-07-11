@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Portfolio{% endblock %}
+
+{% block content %}
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-hero-title">Portfolio Saya</h1>
+    <p class="page-hero-sub">Koleksi proyek yang telah saya bangun</p>
+    <nav class="breadcrumb-custom">
+      <a href="{{ url_for('index') }}">Home</a>
+      <span class="sep"><i class="bi bi-chevron-right"></i></span>
+      <span class="current">Portfolio</span>
+    </nav>
+  </div>
+</section>
+
+<!-- ══════ PORTFOLIO GRID ══════ -->
+<section style="padding:4rem 0;">
+  <div class="container">
+
+    {% if projects %}
+    <!-- Project count -->
+    <p style="color:var(--text-muted); font-size:.875rem; margin-bottom:1.5rem;" data-animate>
+      Menampilkan <strong style="color:var(--text);">{{ projects|length }} proyek</strong>
+    </p>
+
+    <div class="row g-4">
+      {% for project in projects %}
+      <div class="col-md-6 col-xl-4" data-animate data-delay="{{ loop.index0 * 80 }}">
+        <div class="project-card h-100">
+          <!-- Thumbnail -->
+          <div class="project-img-wrap">
+            {% if project.image_file and project.image_file != 'default.jpg' %}
+            <img src="{{ url_for('static', filename='uploads/' + project.image_file) }}"
+                 alt="{{ project.title }}">
+            {% else %}
+            <div class="project-img-placeholder"><i class="bi bi-window-stack"></i></div>
+            {% endif %}
+            <div class="project-overlay"></div>
+            <span style="position:absolute; top:12px; left:12px; background:white; color:var(--primary); font-size:.72rem; font-weight:700; padding:.25rem .7rem; border-radius:var(--radius-full); box-shadow:var(--shadow-sm);">
+              #{{ loop.index }}
+            </span>
+          </div>
+
+          <!-- Body -->
+          <div class="project-body">
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-desc">{{ project.description[:120] }}...</p>
+
+            <!-- Tech tags dari database -->
+            <div class="tech-tags">
+              {% for tech in project.tech_list() %}
+              <span class="tech-tag">{{ tech }}</span>
+              {% endfor %}
+            </div>
+
+            <!-- Links -->
+            <div class="project-links">
+              <a href="{{ url_for('project_detail', id=project.id) }}" class="project-link-btn primary">
+                <i class="bi bi-eye me-1"></i> Lihat Detail
+              </a>
+              {% if project.github_link %}
+              <a href="{{ project.github_link }}" target="_blank" class="project-link-btn outline">
+                <i class="bi bi-github me-1"></i> GitHub
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="text-center py-5" data-animate>
+      <i class="bi bi-inbox" style="font-size:3.5rem; color:var(--text-light); display:block; margin-bottom:1rem;"></i>
+      <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:.5rem;">Belum ada proyek</h3>
+      <p style="color:var(--text-muted);">Tambahkan proyek pertama Anda dari dashboard admin.</p>
+      <a href="{{ url_for('login') }}" class="btn-primary-custom mt-3">
+        <i class="bi bi-plus-circle-fill"></i> Tambah Project
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

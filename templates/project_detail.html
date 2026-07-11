@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }}{% endblock %}
+{% block meta_desc %}{{ project.description[:160] }}{% endblock %}
+
+{% block content %}
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-hero-title">{{ project.title }}</h1>
+    <nav class="breadcrumb-custom">
+      <a href="{{ url_for('index') }}">Home</a>
+      <span class="sep"><i class="bi bi-chevron-right"></i></span>
+      <a href="{{ url_for('portfolio') }}">Portfolio</a>
+      <span class="sep"><i class="bi bi-chevron-right"></i></span>
+      <span class="current">{{ project.title }}</span>
+    </nav>
+  </div>
+</section>
+
+<!-- ══════ PROJECT DETAIL ══════ -->
+<section class="detail-page">
+  <div class="container">
+
+    <a href="{{ url_for('portfolio') }}" class="btn-ghost mb-3 d-inline-flex" style="color:var(--text-muted);">
+      <i class="bi bi-arrow-left me-1"></i> Kembali ke Portfolio
+    </a>
+
+    <!-- Banner -->
+    <div class="detail-banner" data-animate>
+      {% if project.image_file and project.image_file != 'default.jpg' %}
+      <img src="{{ url_for('static', filename='uploads/' + project.image_file) }}"
+           alt="{{ project.title }}" style="width:100%; height:100%; object-fit:cover;">
+      {% else %}
+      <div class="detail-banner-placeholder"><i class="bi bi-window-stack"></i></div>
+      {% endif %}
+      <div class="detail-banner-overlay">
+        <div>
+          <h2 style="color:white; font-size:1.8rem; font-weight:800; margin:0;">{{ project.title }}</h2>
+          <p style="color:rgba(255,255,255,.8); margin:.3rem 0 0;">
+            {{ project.description[:120] }}{% if project.description|length > 120 %}...{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Main Content -->
+      <div class="col-lg-8" data-animate>
+
+        <!-- Deskripsi -->
+        <div style="background:var(--surface); border-radius:var(--radius-lg); padding:2rem; border:1px solid var(--border); box-shadow:var(--shadow-sm); margin-bottom:1.5rem;">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem;">
+            <i class="bi bi-info-circle-fill text-primary"></i> Deskripsi Project
+          </h3>
+          <p style="color:var(--text-muted); line-height:1.85;">{{ project.description }}</p>
+        </div>
+
+        <!-- Tech Stack -->
+        <div style="background:var(--surface); border-radius:var(--radius-lg); padding:2rem; border:1px solid var(--border); box-shadow:var(--shadow-sm); margin-bottom:1.5rem;">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem;">
+            <i class="bi bi-code-slash text-primary"></i> Teknologi yang Digunakan
+          </h3>
+          <div class="d-flex flex-wrap gap-2">
+            {% for tech in project.tech_list() %}
+            <span style="background:var(--primary-50); color:var(--primary); font-weight:600; font-size:.875rem; padding:.4rem 1rem; border-radius:var(--radius-full); border:1px solid var(--primary-100);">
+              {{ tech }}
+            </span>
+            {% else %}
+            <span style="color:var(--text-muted); font-size:.875rem;">Belum ada teknologi yang dicatat.</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Screenshot placeholder -->
+        <div style="background:var(--surface); border-radius:var(--radius-lg); padding:2rem; border:1px solid var(--border); box-shadow:var(--shadow-sm);">
+          <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem;">
+            <i class="bi bi-images text-primary"></i> Screenshot Project
+          </h3>
+          <div class="screenshot-grid">
+            <div class="screenshot-item">
+              <div style="height:180px; background:linear-gradient(135deg, var(--primary-50), var(--primary-100)); display:flex; align-items:center; justify-content:center; color:var(--primary-light); font-size:2.5rem;">
+                <i class="bi bi-display"></i>
+              </div>
+            </div>
+            <div class="screenshot-item">
+              <div style="height:180px; background:linear-gradient(135deg, var(--bg-alt), #E0E7FF); display:flex; align-items:center; justify-content:center; color:var(--primary-light); font-size:2.5rem;">
+                <i class="bi bi-window"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Meta -->
+      <div class="col-lg-4" data-animate data-delay="150">
+        <div class="detail-meta-card">
+          <h3 style="font-size:1rem; font-weight:700; margin-bottom:1.25rem; padding-bottom:.75rem; border-bottom:1px solid var(--border);">
+            <i class="bi bi-link-45deg text-primary me-1"></i> Links & Info
+          </h3>
+
+          {% if project.github_link %}
+          <a href="{{ project.github_link }}" target="_blank" class="detail-link-btn github-btn">
+            <i class="bi bi-github"></i> View on GitHub
+          </a>
+          {% endif %}
+
+          {% if project.live_link %}
+          <a href="{{ project.live_link }}" target="_blank" class="detail-link-btn demo-btn">
+            <i class="bi bi-box-arrow-up-right"></i> Live Demo
+          </a>
+          {% endif %}
+
+          <hr style="border-color:var(--border); margin:1.25rem 0;">
+
+          <div class="d-flex flex-column gap-3">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:.82rem; color:var(--text-muted); font-weight:500;">Tech Stack</span>
+              <span style="font-size:.82rem; font-weight:600;">{{ project.tech_list()|length }} teknologi</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:.82rem; color:var(--text-muted); font-weight:500;">Dibuat</span>
+              <span style="font-size:.82rem; font-weight:600;">{{ project.created_at.strftime('%d %b %Y') }}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:.82rem; color:var(--text-muted); font-weight:500;">Status</span>
+              <span style="font-size:.78rem; background:#D1FAE5; color:#059669; font-weight:700; padding:.2rem .65rem; border-radius:var(--radius-full);">
+                <i class="bi bi-check-circle-fill me-1"></i>Completed
+              </span>
+            </div>
+          </div>
+
+          <hr style="border-color:var(--border); margin:1.25rem 0;">
+
+          <a href="{{ url_for('portfolio') }}" class="btn-ghost w-100 justify-content-center" style="border:1px solid var(--border);">
+            <i class="bi bi-grid-3x3-gap me-1"></i> Semua Projects
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

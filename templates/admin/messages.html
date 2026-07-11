@@ -1,0 +1,109 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Messages{% endblock %}
+{% block page_title %}Pesan Masuk{% endblock %}
+{% block breadcrumb %}Admin / Messages{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <div>
+    <p style="color:var(--text-muted); font-size:.875rem; margin:0;">
+      <strong>{{ messages|selectattr('read', 'equalto', False)|list|length }}</strong> pesan belum dibaca dari total
+      <strong>{{ messages|length }}</strong> pesan
+    </p>
+  </div>
+  <!-- Filter Tabs -->
+  <div style="display:flex; gap:.3rem; background:var(--surface); padding:.3rem; border-radius:var(--radius-full); border:1px solid var(--border);">
+    <button class="filter-btn active" data-filter="all">Semua</button>
+    <button class="filter-btn" data-filter="unread">Belum Dibaca</button>
+    <button class="filter-btn" data-filter="read">Sudah Dibaca</button>
+  </div>
+</div>
+
+<!-- Message List -->
+<div id="message-list">
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="message-item {% if not msg.read %}unread{% endif %}" data-read="{{ 'read' if msg.read else 'unread' }}">
+      <!-- Avatar -->
+      <div class="message-avatar">{{ msg.name[0] | upper }}</div>
+
+      <!-- Content -->
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:.5rem; flex-wrap:wrap;">
+          <div>
+            <span class="message-name">{{ msg.name }}</span>
+            {% if not msg.read %}
+            <span style="background:var(--primary); color:white; font-size:.65rem; font-weight:700; padding:.1rem .5rem; border-radius:var(--radius-full); margin-left:.5rem;">BARU</span>
+            {% endif %}
+            <div class="message-email"><i class="bi bi-envelope me-1"></i>{{ msg.email }}</div>
+          </div>
+          <span class="message-date">{{ msg.date }}</span>
+        </div>
+        <p class="message-text">{{ msg.message }}</p>
+
+        <!-- Actions -->
+        <div style="display:flex; gap:.5rem; margin-top:.6rem; flex-wrap:wrap;">
+          <a href="mailto:{{ msg.email }}" 
+             style="font-size:.78rem; font-weight:600; color:var(--primary); background:var(--primary-50); border:1px solid var(--primary-100); padding:.3rem .8rem; border-radius:var(--radius-full); display:inline-flex; align-items:center; gap:.3rem; transition:all .2s; text-decoration:none;"
+             onmouseover="this.style.background='var(--primary)'; this.style.color='white'" 
+             onmouseout="this.style.background='var(--primary-50)'; this.style.color='var(--primary)'">
+            <i class="bi bi-reply-fill"></i> Balas Email
+          </a>
+          {% if not msg.read %}
+          <form method="POST" action="{{ url_for('admin_read_message', msg_id=msg.id) }}" style="display:inline;">
+            <button type="submit"
+                    style="font-size:.78rem; font-weight:600; color:#10B981; background:#D1FAE5; border:1px solid #A7F3D0; padding:.3rem .8rem; border-radius:var(--radius-full); cursor:pointer; display:inline-flex; align-items:center; gap:.3rem; transition:all .2s;"
+                    onmouseover="this.style.background='#10B981'; this.style.color='white'" 
+                    onmouseout="this.style.background='#D1FAE5'; this.style.color='#10B981'">
+              <i class="bi bi-check2-circle"></i> Tandai Dibaca
+            </button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('admin_delete_message', msg_id=msg.id) }}" style="display:inline;" 
+                onsubmit="return confirm('Hapus pesan dari {{ msg.name }}?')">
+            <button type="submit"
+                    style="font-size:.78rem; font-weight:600; color:var(--danger); background:#FEF2F2; border:1px solid #FECACA; padding:.3rem .8rem; border-radius:var(--radius-full); cursor:pointer; display:inline-flex; align-items:center; gap:.3rem; transition:all .2s;"
+                    onmouseover="this.style.background='var(--danger)'; this.style.color='white'" 
+                    onmouseout="this.style.background='#FEF2F2'; this.style.color='var(--danger)'">
+              <i class="bi bi-trash3-fill"></i> Hapus
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Unread dot -->
+      {% if not msg.read %}
+      <div class="unread-dot"></div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+  <div style="background:var(--surface); border-radius:var(--radius-lg); border:1px solid var(--border); padding:4rem; text-align:center;">
+    <i class="bi bi-inbox" style="font-size:3rem; color:var(--text-light); display:block; margin-bottom:1rem;"></i>
+    <p style="color:var(--text-muted); font-size:.9rem; margin:0;">Belum ada pesan masuk.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Filter tabs
+  const filterBtns = document.querySelectorAll('[data-filter]');
+  const msgItems = document.querySelectorAll('.message-item');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const filter = this.dataset.filter;
+      msgItems.forEach(item => {
+        if (filter === 'all') { item.style.display = ''; return; }
+        item.style.display = item.dataset.read === filter ? '' : 'none';
+      });
+    });
+  });
+</script>
+{% endblock %}

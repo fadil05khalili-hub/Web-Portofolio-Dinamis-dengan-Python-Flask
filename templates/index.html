@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- ══════ HERO SECTION ══════ -->
+<section class="hero-section">
+  <div class="hero-bg-blob blob-1"></div>
+  <div class="hero-bg-blob blob-2"></div>
+  <div class="hero-bg-blob blob-3"></div>
+
+  <div class="container">
+    <div class="row align-items-center gy-5">
+
+      <!-- Teks Hero -->
+      <div class="col-lg-6 hero-content" data-animate>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span> Open to opportunities
+        </div>
+        <h1 class="hero-title">
+          Halo, Saya<br>
+          <span class="text-gradient">{{ profile.name }}</span>
+        </h1>
+        <p class="hero-subtitle" style="font-size:1.05rem; font-weight:600; color:var(--primary); margin-bottom:.5rem;">
+          {{ profile.headline }}
+        </p>
+        <p class="hero-subtitle">{{ profile.about | truncate(200) }}</p>
+
+        <div class="hero-buttons">
+          <a href="{{ url_for('portfolio') }}" class="btn-primary-custom">
+            <i class="bi bi-grid-3x3-gap-fill"></i> Lihat Portfolio
+          </a>
+          <a href="{{ url_for('contact') }}" class="btn-outline-custom">
+            <i class="bi bi-chat-dots"></i> Hubungi Saya
+          </a>
+        </div>
+
+        <!-- Stats dinamis dari database -->
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">{{ projects | length }}+</span>
+            <span class="hero-stat-label">Projects</span>
+          </div>
+          <div style="width:1px; background:var(--border); height:40px; align-self:center;"></div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">{{ skills | length }}+</span>
+            <span class="hero-stat-label">Skills</span>
+          </div>
+          <div style="width:1px; background:var(--border); height:40px; align-self:center;"></div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">3+</span>
+            <span class="hero-stat-label">Tahun Exp</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto Profil -->
+      <div class="col-lg-6 d-flex justify-content-center" data-animate data-delay="200">
+        <div class="profile-image-wrapper">
+          <div class="profile-image-ring">
+            {% if profile.photo and profile.photo != 'default_profile.jpg' %}
+            <img src="{{ url_for('static', filename='uploads/' + profile.photo) }}"
+                 alt="{{ profile.name }}">
+            {% else %}
+            <div class="profile-image-placeholder">
+              <i class="bi bi-person-fill"></i>
+            </div>
+            {% endif %}
+          </div>
+          <div class="profile-badge badge-1">
+            <span class="badge-icon">💻</span>
+            <div>
+              <div style="font-size:.72rem; color:var(--text-muted); line-height:1;">Stack</div>
+              <div style="font-size:.82rem;">Flask + SQLite</div>
+            </div>
+          </div>
+          <div class="profile-badge badge-2">
+            <span class="badge-icon">📍</span>
+            <div>
+              <div style="font-size:.72rem; color:var(--text-muted); line-height:1;">Lokasi</div>
+              <div style="font-size:.82rem;">{{ profile.location }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SKILLS PREVIEW ══════ -->
+{% if skills %}
+<section style="padding:4rem 0; background:var(--bg-alt);">
+  <div class="container">
+    <div class="row align-items-end mb-4">
+      <div class="col-lg-7" data-animate>
+        <span class="section-badge"><i class="bi bi-lightning-fill"></i> Skills</span>
+        <h2 class="section-title">Keahlian Teknis</h2>
+        <p class="section-subtitle">Teknologi yang saya kuasai dalam pengembangan aplikasi.</p>
+      </div>
+      <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+        <a href="{{ url_for('about') }}" class="btn-outline-custom">
+          Selengkapnya <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="row g-3">
+      {% for skill in skills[:6] %}
+      <div class="col-md-6 col-lg-4" data-animate data-delay="{{ loop.index0 * 80 }}">
+        <div class="skill-card">
+          <div class="skill-header">
+            <span class="skill-name">{{ skill.name }}</span>
+            <span class="skill-percent">{{ skill.level }}%</span>
+          </div>
+          <div class="progress-bar-custom">
+            <div class="progress-fill" style="width:{{ skill.level }}%;"></div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ══════ FEATURED PROJECTS ══════ -->
+<section style="padding:4rem 0; background:var(--surface);">
+  <div class="container">
+    <div class="row align-items-end mb-4">
+      <div class="col-lg-7" data-animate>
+        <span class="section-badge"><i class="bi bi-stars"></i> Featured Work</span>
+        <h2 class="section-title">Project <span class="text-gradient">Terbaru</span></h2>
+        <p class="section-subtitle">Karya-karya terbaru yang telah saya kerjakan.</p>
+      </div>
+      <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+        <a href="{{ url_for('portfolio') }}" class="btn-outline-custom">
+          Semua Projects <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+    {% if projects %}
+    <div class="row g-4">
+      {% for project in projects %}
+      <div class="col-md-6 col-lg-4" data-animate data-delay="{{ loop.index0 * 120 }}">
+        <div class="project-card h-100">
+          <div class="project-img-wrap">
+            {% if project.image_file and project.image_file != 'default.jpg' %}
+            <img src="{{ url_for('static', filename='uploads/' + project.image_file) }}"
+                 alt="{{ project.title }}">
+            {% else %}
+            <div class="project-img-placeholder"><i class="bi bi-window-stack"></i></div>
+            {% endif %}
+            <div class="project-overlay"></div>
+          </div>
+          <div class="project-body">
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-desc">{{ project.description | truncate(100) }}</p>
+            <div class="tech-tags">
+              {% for tech in project.tech_list()[:4] %}
+              <span class="tech-tag">{{ tech }}</span>
+              {% endfor %}
+            </div>
+            <div class="project-links">
+              <a href="{{ url_for('project_detail', id=project.id) }}" class="project-link-btn primary">
+                <i class="bi bi-eye me-1"></i> Detail
+              </a>
+              {% if project.github_link %}
+              <a href="{{ project.github_link }}" target="_blank" class="project-link-btn outline">
+                <i class="bi bi-github me-1"></i> GitHub
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+      <i class="bi bi-folder2-open" style="font-size:3rem; color:var(--text-light);"></i>
+      <p style="color:var(--text-muted); margin-top:1rem;">Belum ada proyek. Tambahkan dari dashboard admin.</p>
+      <a href="{{ url_for('login') }}" class="btn-primary-custom mt-2">
+        <i class="bi bi-plus-circle"></i> Tambah Project
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ══════ CTA SECTION ══════ -->
+<section style="padding:5rem 0; background:linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); position:relative; overflow:hidden;">
+  <div style="position:absolute; width:400px; height:400px; background:white; border-radius:50%; opacity:.04; top:-100px; right:-100px;"></div>
+  <div class="container text-center" style="position:relative; z-index:1;" data-animate>
+    <h2 style="color:white; font-size:clamp(1.6rem,4vw,2.2rem); font-weight:800; margin-bottom:1rem;">
+      Mari Berkolaborasi!
+    </h2>
+    <p style="color:rgba(255,255,255,.8); font-size:1rem; max-width:500px; margin:0 auto 2rem;">
+      Punya ide proyek yang ingin diwujudkan? Saya siap membantu Anda.
+    </p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{{ url_for('contact') }}"
+         style="background:white; color:var(--primary); border-radius:var(--radius-full); padding:.75rem 2rem; font-weight:700; font-size:.95rem; display:inline-flex; align-items:center; gap:.5rem; transition:all .3s; box-shadow:0 4px 20px rgba(0,0,0,.15); text-decoration:none;">
+        <i class="bi bi-send-fill"></i> Kirim Pesan
+      </a>
+      <a href="{{ url_for('portfolio') }}"
+         style="background:rgba(255,255,255,.1); color:white; border:2px solid rgba(255,255,255,.3); border-radius:var(--radius-full); padding:.73rem 2rem; font-weight:600; font-size:.95rem; display:inline-flex; align-items:center; gap:.5rem; transition:all .3s; text-decoration:none; backdrop-filter:blur(10px);">
+        <i class="bi bi-folder2-open"></i> Lihat Portfolio
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

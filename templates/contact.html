@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Contact{% endblock %}
+{% block meta_desc %}Hubungi Alex Rizky Pratama untuk kolaborasi project, pertanyaan, atau peluang kerja sama.{% endblock %}
+
+{% block content %}
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="container">
+    <h1 class="page-hero-title">Hubungi Saya</h1>
+    <p class="page-hero-sub">Saya selalu terbuka untuk diskusi dan kolaborasi baru</p>
+    <nav class="breadcrumb-custom">
+      <a href="{{ url_for('index') }}">Home</a>
+      <span class="sep"><i class="bi bi-chevron-right"></i></span>
+      <span class="current">Contact</span>
+    </nav>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTACT SECTION
+══════════════════════════════════════════════════════════ -->
+<section class="contact-page">
+  <div class="container">
+    <div class="row g-4 align-items-start">
+
+      <!-- Contact Form -->
+      <div class="col-lg-7" data-animate>
+        <div class="contact-form-card">
+          <span class="section-badge"><i class="bi bi-envelope-fill"></i> Get In Touch</span>
+          <h2 style="font-size:1.5rem; font-weight:800; margin-bottom:.5rem;">Kirim Pesan</h2>
+          <p style="color:var(--text-muted); font-size:.875rem; margin-bottom:1.75rem;">
+            Isi form di bawah ini dan saya akan merespons dalam 24 jam.
+          </p>
+
+          <form method="POST" action="{{ url_for('contact') }}" novalidate>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="name" class="form-label-custom">Nama Lengkap <span style="color:var(--danger);">*</span></label>
+                <input type="text" id="name" name="name" class="form-control-custom" placeholder="John Doe" required>
+              </div>
+              <div class="col-sm-6">
+                <label for="email" class="form-label-custom">Alamat Email <span style="color:var(--danger);">*</span></label>
+                <input type="email" id="email" name="email" class="form-control-custom" placeholder="john@example.com" required>
+              </div>
+              <div class="col-12">
+                <label for="subject" class="form-label-custom">Subjek</label>
+                <input type="text" id="subject" name="subject" class="form-control-custom" placeholder="Kolaborasi Project...">
+              </div>
+              <div class="col-12">
+                <label for="message" class="form-label-custom">Pesan <span style="color:var(--danger);">*</span></label>
+                <textarea id="message" name="message" rows="5" class="form-control-custom" placeholder="Ceritakan tentang project atau pertanyaan Anda..." required></textarea>
+              </div>
+              <div class="col-12 mt-1">
+                <button type="submit" class="btn-primary-custom w-100 justify-content-center" style="padding:.85rem;">
+                  <i class="bi bi-send-fill"></i> Kirim Pesan
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-lg-5" data-animate data-delay="150">
+        <div class="contact-info-card">
+          <span class="section-badge"><i class="bi bi-info-circle-fill"></i> Info Kontak</span>
+          <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:1.25rem;">Informasi Kontak</h3>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon" style="background:var(--primary-50); color:var(--primary);">
+              <i class="bi bi-envelope-fill"></i>
+            </div>
+            <div>
+              <div style="font-size:.75rem; color:var(--text-muted); font-weight:500;">Email</div>
+              <div style="font-weight:600; font-size:.9rem;">{{ profile.email }}</div>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon" style="background:#D1FAE5; color:#10B981;">
+              <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <div>
+              <div style="font-size:.75rem; color:var(--text-muted); font-weight:500;">Lokasi</div>
+              <div style="font-weight:600; font-size:.9rem;">{{ profile.location }}</div>
+            </div>
+          </div>
+
+          <div class="contact-info-item">
+            <div class="contact-info-icon" style="background:#FEF3C7; color:#F59E0B;">
+              <i class="bi bi-clock-fill"></i>
+            </div>
+            <div>
+              <div style="font-size:.75rem; color:var(--text-muted); font-weight:500;">Waktu Respons</div>
+              <div style="font-weight:600; font-size:.9rem;">Dalam 24 jam</div>
+            </div>
+          </div>
+
+          <hr style="border-color:var(--border); margin:1.25rem 0;">
+
+          <p style="font-weight:700; font-size:.9rem; margin-bottom:.9rem;">Social Media</p>
+          <div class="d-flex flex-column gap-2">
+            <a href="https://github.com/fadil05khalili-hub" target="_blank" class="social-link-btn social-github">
+              <i class="bi bi-github fs-5"></i>
+              <div>
+                <div style="font-size:.72rem; opacity:.7; line-height:1;">GitHub</div>
+                <div style="font-size:.85rem;">fadil05khalili-hub</div>
+              </div>
+              <i class="bi bi-arrow-right ms-auto"></i>
+            </a>
+            <div class="social-link-btn social-linkedin" style="cursor:default;">
+              <i class="bi bi-linkedin fs-5"></i>
+              <div>
+                <div style="font-size:.72rem; opacity:.7; line-height:1;">LinkedIn</div>
+                <div style="font-size:.85rem;">Fadil Barok</div>
+              </div>
+            </div>
+            <a href="mailto:{{ profile.email }}" class="social-link-btn social-email">
+              <i class="bi bi-envelope-fill fs-5"></i>
+              <div>
+                <div style="font-size:.72rem; opacity:.7; line-height:1;">Email</div>
+                <div style="font-size:.85rem;">{{ profile.email }}</div>
+              </div>
+              <i class="bi bi-arrow-right ms-auto"></i>
+            </a>
+          </div>
+
+          <!-- Availability badge -->
+          <div style="margin-top:1.5rem; background:var(--primary-50); border:1px solid var(--primary-100); border-radius:var(--radius); padding:1rem; display:flex; align-items:center; gap:.75rem;">
+            <div style="width:10px; height:10px; background:var(--success); border-radius:50%; animation:pulse-dot 2s infinite; flex-shrink:0;"></div>
+            <div>
+              <div style="font-weight:700; font-size:.85rem; color:var(--primary);">Tersedia untuk Project</div>
+              <div style="font-size:.78rem; color:var(--text-muted);">Saat ini menerima proyek freelance</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

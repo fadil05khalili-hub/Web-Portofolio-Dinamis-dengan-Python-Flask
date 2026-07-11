@@ -1,0 +1,122 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Projects{% endblock %}
+{% block page_title %}Kelola Projects{% endblock %}
+{% block breadcrumb %}Admin / Projects{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+  <p style="color:var(--text-muted);font-size:.875rem;margin:0;">
+    Total <strong>{{ projects|length }} project</strong> dalam portfolio
+  </p>
+  <a href="{{ url_for('admin_add_project') }}" class="btn-primary-custom">
+    <i class="bi bi-plus-circle-fill"></i> Tambah Project Baru
+  </a>
+</div>
+
+<div class="admin-table-wrap">
+  <div class="admin-table-header">
+    <span class="admin-table-title"><i class="bi bi-table text-primary me-2"></i>Daftar Projects</span>
+    <div style="position:relative;">
+      <i class="bi bi-search" style="position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:.85rem;"></i>
+      <input type="text" placeholder="Cari project..." id="project-search"
+             style="padding:.45rem .75rem .45rem 2.2rem;border:1.5px solid var(--border);border-radius:var(--radius-full);font-family:'Poppins',sans-serif;font-size:.82rem;color:var(--text);background:var(--bg);outline:none;width:220px;transition:border-color .2s;"
+             onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table class="table-custom" id="projects-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Teknologi</th>
+          <th>Status</th>
+          <th style="text-align:right;">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if projects %}
+          {% for project in projects %}
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:.75rem;">
+                <div style="width:48px;height:36px;background:linear-gradient(135deg,var(--primary-50),var(--primary-100));border-radius:8px;border:1px solid var(--primary-100);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1rem;flex-shrink:0;">
+                  <i class="bi bi-window-stack"></i>
+                </div>
+                <div>
+                  <div style="font-weight:700;font-size:.875rem;">{{ project.title }}</div>
+                  <div style="font-size:.75rem;color:var(--text-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ project.short_desc }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="display:flex;flex-wrap:wrap;gap:.25rem;max-width:220px;">
+                {% for tech in project.tech[:3] %}
+                <span style="background:var(--bg-alt);font-size:.7rem;font-weight:500;padding:.15rem .5rem;border-radius:var(--radius-full);border:1px solid var(--border);color:var(--text-muted);">{{ tech }}</span>
+                {% endfor %}
+                {% if project.tech|length > 3 %}
+                <span style="font-size:.7rem;color:var(--text-light);">+{{ project.tech|length - 3 }}</span>
+                {% endif %}
+              </div>
+            </td>
+            <td>
+              <span style="background:#D1FAE5;color:#059669;font-size:.75rem;font-weight:700;padding:.25rem .75rem;border-radius:var(--radius-full);">
+                <i class="bi bi-check-circle-fill me-1"></i>Aktif
+              </span>
+            </td>
+            <td style="text-align:right;">
+              <a href="{{ url_for('project_detail', id=project.id) }}" target="_blank"
+                 style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .15s;margin-right:.25rem;"
+                 title="Preview">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="{{ url_for('admin_edit_project', project_id=project.id) }}"
+                 style="width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;color:var(--primary);transition:all .15s;margin-right:.25rem;"
+                 title="Edit">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <form method="POST" action="{{ url_for('admin_delete_project', project_id=project.id) }}" style="display:inline;"
+                    onsubmit="return confirm('Yakin ingin menghapus project ini?')">
+                <button type="submit"
+                        style="width:32px;height:32px;border-radius:8px;border:1px solid #FECACA;background:#FEF2F2;display:inline-flex;align-items:center;justify-content:center;color:var(--danger);cursor:pointer;transition:all .15s;"
+                        title="Hapus">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="4" style="text-align:center;padding:3rem;color:var(--text-muted);">
+            <i class="bi bi-inbox" style="font-size:2.5rem;display:block;margin-bottom:.75rem;color:var(--text-light);"></i>
+            Belum ada project. <a href="{{ url_for('admin_add_project') }}" style="color:var(--primary);font-weight:600;">Tambah sekarang</a>.
+          </td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+  <div style="padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;">
+    <span style="font-size:.8rem;color:var(--text-muted);">Menampilkan {{ projects|length }} project</span>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const searchInput = document.getElementById('project-search');
+const tableRows = document.querySelectorAll('#projects-table tbody tr');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    tableRows.forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  });
+}
+</script>
+{% endblock %}

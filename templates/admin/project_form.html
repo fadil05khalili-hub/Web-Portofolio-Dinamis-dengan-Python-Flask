@@ -1,0 +1,93 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{% if action == 'add' %}Tambah Project{% else %}Edit Project{% endif %}{% endblock %}
+{% block page_title %}{% if action == 'add' %}Tambah Project Baru{% else %}Edit Project{% endif %}{% endblock %}
+{% block breadcrumb %}Admin / Projects / {% if action == 'add' %}Tambah{% else %}Edit{% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center mb-4">
+  <a href="{{ url_for('admin_projects') }}" class="btn-ghost" style="border:1px solid var(--border);">
+    <i class="bi bi-arrow-left"></i> Kembali
+  </a>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+  <div class="row g-4">
+
+    <!-- Kiri: Field Utama -->
+    <div class="col-lg-8">
+      <div class="admin-form-card mb-3">
+        <p class="admin-form-section-title">Informasi Project</p>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label-custom" for="title">Judul Project <span style="color:var(--danger);">*</span></label>
+            <input type="text" id="title" name="title" class="form-control-custom"
+                   value="{{ project.title if project else '' }}"
+                   placeholder="Contoh: E-Commerce Platform" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label-custom" for="description">Deskripsi Lengkap <span style="color:var(--danger);">*</span></label>
+            <textarea id="description" name="description" rows="6" class="form-control-custom"
+                      placeholder="Jelaskan project secara detail..." required>{{ project.description if project else '' }}</textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label-custom" for="tech">Teknologi (pisahkan dengan koma) <span style="color:var(--danger);">*</span></label>
+            <input type="text" id="tech" name="tech" class="form-control-custom"
+                   value="{% if project %}{{ project.tech|join(', ') }}{% endif %}"
+                   placeholder="Contoh: Python, Flask, SQLite, Bootstrap">
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-custom" for="github">Link GitHub</label>
+            <div style="position:relative;">
+              <i class="bi bi-github" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-light);"></i>
+              <input type="url" id="github" name="github" class="form-control-custom"
+                     style="padding-left:2.75rem;"
+                     value="{{ project.github if project else '' }}"
+                     placeholder="https://github.com/user/repo">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-custom" for="demo">Link Live Demo</label>
+            <div style="position:relative;">
+              <i class="bi bi-globe" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-light);"></i>
+              <input type="url" id="demo" name="demo" class="form-control-custom"
+                     style="padding-left:2.75rem;"
+                     value="{{ project.demo if project else '' }}"
+                     placeholder="https://demo.example.com">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kanan: Gambar + Submit -->
+    <div class="col-lg-4">
+
+      <div class="admin-form-card mb-3">
+        <p class="admin-form-section-title">Thumbnail Project</p>
+        <div class="upload-area" onclick="document.getElementById('image-upload').click()"
+             style="background:var(--bg-alt);border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:border-color .2s;"
+             onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-size:2rem;color:var(--primary);margin-bottom:.5rem;"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+          <p style="font-weight:600;font-size:.9rem;margin:0 0 .25rem;">Klik atau drag gambar</p>
+          <p style="font-size:.78rem;color:var(--text-light);margin:0;">PNG, JPG, WEBP, GIF · Maks. 5MB</p>
+        </div>
+        <input type="file" id="image-upload" name="image" accept="image/*" style="display:none;" data-preview="image-preview">
+        <img id="image-preview" src="#" alt="Preview" style="display:none;width:100%;border-radius:var(--radius);margin-top:.75rem;object-fit:cover;height:140px;">
+      </div>
+
+      <div class="admin-form-card">
+        <button type="submit" class="btn-primary-custom w-100 justify-content-center" style="padding:.8rem;">
+          <i class="bi {% if action == 'add' %}bi-plus-circle-fill{% else %}bi-check-circle-fill{% endif %}"></i>
+          {% if action == 'add' %}Tambah Project{% else %}Simpan Perubahan{% endif %}
+        </button>
+        <a href="{{ url_for('admin_projects') }}" class="btn-ghost w-100 justify-content-center mt-2" style="border:1px solid var(--border);">
+          Batal
+        </a>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+{% endblock %}
