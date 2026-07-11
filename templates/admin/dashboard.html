@@ -1,6 +1,6 @@
 {% extends "admin/base_admin.html" %}
 {% block title %}Dashboard{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Administrator{% endblock %}
 {% block breadcrumb %}Admin / Dashboard{% endblock %}
 
 {% block content %}
@@ -11,8 +11,8 @@
   <div style="position:absolute; width:200px; height:200px; background:white; opacity:.04; border-radius:50%; bottom:-60px; right:150px;"></div>
   <div style="position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
     <div>
-      <h2 style="color:white; font-weight:800; font-size:1.3rem; margin:0 0 .3rem;">Selamat datang kembali, Admin! 👋</h2>
-      <p style="color:rgba(255,255,255,.75); font-size:.875rem; margin:0;">Kelola portfolio Anda dengan mudah dari sini.</p>
+      <h2 style="color:white; font-weight:800; font-size:1.3rem; margin:0 0 .3rem;">Selamat Datang di Dashboard Administrator👋</h2>
+      <p style="color:rgba(255,255,255,.75); font-size:.875rem; margin:0;">Kelola project, skill, profil, dan pesan dengan mudah melalui dashboard ini.</p>
     </div>
     <a href="{{ url_for('index') }}" target="_blank"
        style="background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2); color:white; padding:.5rem 1.2rem; border-radius:var(--radius-full); font-size:.85rem; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; backdrop-filter:blur(10px); transition:all .2s; text-decoration:none;"
@@ -34,10 +34,10 @@
   <div class="col-sm-6 col-xl-3">
     <div class="admin-stat-card">
       <div class="admin-stat-trend {% if card.up %}trend-up{% else %}trend-down{% endif %}">
-        <i class="bi {% if card.up %}bi-arrow-up-right{% else %}bi-arrow-down-right{% endif %}"></i>
+        <i class="bi {% if card.up <div class="admin-stat-icon" style="background:{{ card.bg }}; color:{{ card.color }};"></i> %}bi-arrow-up-right{% else %}bi-arrow-down-right{% endif %}"></i>
         <span>{{ card.trend }}</span>
       </div>
-      <div class="admin-stat-icon" style="background:{{ card.bg }}; color:{{ card.color }};">
+     
         <i class="bi {{ card.icon }}"></i>
       </div>
       <div class="admin-stat-num">{{ card.num }}</div>
@@ -63,7 +63,7 @@
           <i class="bi bi-person-gear"></i> Edit Profil
         </a>
         <a href="{{ url_for('index') }}" target="_blank" class="btn-ghost" style="border:1px solid var(--border); font-size:.85rem; padding:.5rem 1.25rem;">
-          <i class="bi bi-eye"></i> Preview Site
+          <i class="bi bi-eye"></i> Lihat Website
         </a>
       </div>
     </div>
@@ -107,7 +107,7 @@
   <div class="col-lg-6">
     <div class="admin-table-wrap">
       <div class="admin-table-header">
-        <span class="admin-table-title"><i class="bi bi-folder2-open text-primary me-2"></i>Project Terbaru</span>
+        <span class="admin-table-title"><i class="bi bi-folder2-open text-primary me-2"></i>Daftar Project</span>
         <a href="{{ url_for('admin_projects') }}" style="font-size:.8rem; color:var(--primary); font-weight:600; text-decoration:none;">
           Kelola <i class="bi bi-arrow-right"></i>
         </a>
