@@ -12,6 +12,10 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config.from_object('config.Config')
 
+@app.route('/')
+def home():
+    return render_template('index.html') 
+
 if not os.environ.get('VERCEL'):
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 db.init_app(app)
