@@ -390,11 +390,9 @@ def seed_data():
         ])
     db.session.commit()
 
-
-# ══ ENTRY POINT ══════════════════════════════════════════════
-    with app.app_context():
-        db.create_all()
-
+# === ENTRY POINT ===
     if __name__ == '__main__':
-        seed_data()
+        with app.app_context():
+            db.create_all()
+            seed_data()
         app.run(debug=True)
